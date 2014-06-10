@@ -1,0 +1,39 @@
+{
+  "name": "clearance",
+  "description": "Agnostic, asynchronous, and extensible JavaScript object validation.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/jasonbellamy/clearance",
+  "author": {
+    "name": "Jason Bellamy",
+    "email": "j@sonbellamy.com",
+    "url": "http://jasonbellamy.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jasonbellamy/clearance.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jasonbellamy/clearance/issues"
+  },
+  "license": "MIT",
+  "main": "src/clearance.js",
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*"
+  },
+  "keywords": [
+    "validate",
+    "validation",
+    "form",
+    "object",
+    "client",
+    "server"
+  ]
+}
+
