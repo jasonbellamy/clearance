@@ -65,7 +65,7 @@
    * @example
    *
    * // Add a validation rule to check if an objects value is at least 4 characters long.
-   * Clearance.setRule( "minimumLength", function( object, set ) {
+   * Clearance.setRule( "minimumLength", function( object, set, collection ) {
    *   if ( object.value.length < 4 ) {
    *     set.invalid( "This objects value must be at least 4 characters long" );
    *   } else {
@@ -91,6 +91,7 @@
      * @param {object} set - object containing valid/invalid callback methods.
      * @param {Clearance.ruleValidCallback} set.valid - callback to trigger if the object is valid.
      * @param {Clearance.ruleInvalidCallback} set.invalid - callback to trigger if the object is invalid.
+     * @param {object} collection - collection of objects this object is associated with.
      */
 
     /**
@@ -133,7 +134,7 @@
         enumerable: true,
         configurable: true,
         writable: true,
-        value: new ClearanceObject( { name: object.name, value: object.value, message: object.message, valid: object.valid, rules: rules } )
+        value: new ClearanceObject( { name: object.name, value: object.value, message: object.message, valid: object.valid, rules: rules, collection: this.collection } )
       });
     },
 
@@ -247,6 +248,7 @@
    * @param {string} [object.message=""] - the validation message associated with the current state.
    * @param {boolean} [object.valid=false] - the initial state of the object.
    * @param {string|number|boolean} [object.value=""] - the value to be validated.
+   * @param {object} [object.collection={}] - the collection of objects this object is associated with.
    */
   var ClearanceObject = function( object ) {
     if ( !( this instanceof ClearanceObject ) ) {
@@ -258,6 +260,7 @@
     this.setRules( object.rules );
     this.setValid( object.valid );
     this.setValue( object.value );
+    this.setCollection( object.collection );
   };
 
   /**
@@ -308,6 +311,14 @@
     },
 
     /**
+     * @description sets the collection of objects this object is associated with.
+     * @param {boolean} value - the collection.
+     */
+    setValid: function( value ) {
+      Object.defineProperty( this, "collection", { value: value || {} } );
+    },
+
+    /**
      * @description tests whether the objects rules are valid and sets the corresponding message.
      * @param {function} callback - executed after all the objects validation rules have been run.
      */
@@ -330,7 +341,7 @@
             this.setMessage( message );
             callback();
           }.bind( this )
-        });
+        }, this.collection );
       }.bind( this );
 
       validate( 0 );
