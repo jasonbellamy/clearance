@@ -49,7 +49,7 @@
       return new Clearance( schema );
     }
 
-    this.library  = Object.create( null );
+    this.collection = Object.create( null );
 
     schema.forEach( function( object ) {
       this.set( object );
@@ -116,7 +116,7 @@
 
     /**
      * @requires ClearanceObject
-     * @description creates an object entry in the library.
+     * @description creates an object entry in the collection.
      * @param {object} object - the object containing the properties required to create an object.
      * @param {string} object.name - the name to be associated with this object.
      * @param {array} object.rules - the validation rules associated with this object.
@@ -129,7 +129,7 @@
         return this.rules[ rule ];
       }.bind( this ));
 
-      return Object.defineProperty( this.library, object.name, {
+      return Object.defineProperty( this.collection, object.name, {
         enumerable: true,
         configurable: true,
         writable: true,
@@ -138,20 +138,20 @@
     },
 
     /**
-     * @description gets a list of objects from the library that match the provided filters.
+     * @description gets a list of objects from the collection that match the provided filters.
      * @param {object} filters - an object containing property/value pairs to match.
-     * @return {object[]} an array of objects from the library.
+     * @return {object[]} an array of objects from the collection.
      * @example
      *
-     * this.get( { valid: false } );     // returns all the invalid objects from the library.
-     * this.get( { name: "username" } ); // returns the username object from the library.
-     * this.get( { value: "unicorn" } ); // returns all objects with a value of "unicorn" from the library.
+     * this.get( { valid: false } );     // returns all the invalid objects from the collection.
+     * this.get( { name: "username" } ); // returns the username object from the collection.
+     * this.get( { value: "unicorn" } ); // returns all objects with a value of "unicorn" from the collection.
      *
      */
     get: function( filters ) {
-      return Object.keys( this.library ).map( function( name ) {
+      return Object.keys( this.collection ).map( function( name ) {
         if ( this.exists( name, filters ) ) {
-          return this.library[ name ];
+          return this.collection[ name ];
         }
       }.bind( this )).filter( function( object ) {
         return object !== undefined;
@@ -159,12 +159,12 @@
     },
 
     /**
-     * @description tests whether ALL of the objects in the library are valid.
+     * @description tests whether ALL of the objects in the collection are valid.
      * @returns {boolean} true if ALL of the objects are valid.
      */
     isValid: function () {
-      return !Object.keys( this.library ).map( function( name ) {
-        return this.library[ name ];
+      return !Object.keys( this.collection ).map( function( name ) {
+        return this.collection[ name ];
       }.bind( this )).some( function( object ) {
         return !object.valid;
       });
@@ -178,7 +178,7 @@
      */
     exists: function( name, filters ) {
       return Object.keys( filters ).every( function( filter ) {
-        return ( filters[ filter ] === this.library[ name ][ filter ] );
+        return ( filters[ filter ] === this.collection[ name ][ filter ] );
       }.bind( this ));
     },
 
