@@ -312,7 +312,7 @@
 
     /**
      * @description sets the collection of objects this object is associated with.
-     * @param {boolean} value - the collection.
+     * @param {object} value - the collection.
      */
     setCollection: function( value ) {
       Object.defineProperty( this, "collection", { value: value || {} } );
