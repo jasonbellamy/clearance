@@ -86,7 +86,9 @@
     /**
      * @callback Clearance.ruleCallback
      * @param {object} object - the object being validated.
+     * @param {string} object.message - the message associated with the state of the object.
      * @param {string} object.name - the name of the object.
+     * @param {boolean} object.valid - the state of the object.
      * @param {string|number|boolean} object.value - the value of the object.
      * @param {object} set - object containing valid/invalid callback methods.
      * @param {Clearance.ruleValidCallback} set.valid - callback to trigger if the object is valid.
@@ -204,7 +206,7 @@
              * @param {object[]} objects - an array containing all the valid objects.
              */
             if ( this.isValid() && options.valid && typeof options.valid === "function" ) {
-              options.valid.apply( this, [ this.get( { valid: true } ) ] );
+              options.valid.apply( this, [ this.get( { valid: true } ).map( function( object ) { return object.getSanitized(); } ) ] );
             }
 
             /**
@@ -212,7 +214,7 @@
              * @param {object[]} objects - an array containing all the invalid objects.
              */
             if ( !this.isValid() && options.invalid && typeof options.invalid === "function" ) {
-              options.invalid.apply( this, [ this.get( { valid: false } ) ] );
+              options.invalid.apply( this, [ this.get( { valid: false } ).map( function( object ) { return object.getSanitized(); } ) ] );
             }
 
             /**
@@ -222,7 +224,9 @@
             if ( options.complete && typeof options.complete === "function" ) {
               var objects = ( function () {
                 return options.data.map( function( filter ) {
-                  return this.get( { name: filter.name } );
+                  return this.get( { name: filter.name } ).map( function( object ) {
+                    return object.getSanitized();
+                  });
                 }.bind( this )).reduce( function( a, b ) {
                   return a.concat( b );
                 });
@@ -319,12 +323,25 @@
     },
 
     /**
+     * @description returns an object that contains only the properties that should be exposed.
+     * @return {object} - the sanitized object.
+     */
+    getSanitized: function () {
+      return {
+        message: this.message,
+        name: this.name,
+        valid: this.valid,
+        value: this.value
+      };
+    },
+
+    /**
      * @description tests whether the objects rules are valid and sets the corresponding message.
      * @param {function} callback - executed after all the objects validation rules have been run.
      */
     validate: function( callback ) {
       var validate = function( i ) {
-        this.rules[ i ]( { name: this.name, value: this.value }, {
+        this.rules[ i ]( this.getSanitized(), {
           valid: function( message ) {
             this.setValid( true );
 
@@ -341,7 +358,12 @@
             this.setMessage( message );
             callback();
           }.bind( this )
-        }, this.collection );
+        },
+
+        Object.keys( this.collection ).map( function( name ) {
+          return this.collection[ name ].getSanitized();
+        }.bind( this )) );
+
       }.bind( this );
 
       validate( 0 );
