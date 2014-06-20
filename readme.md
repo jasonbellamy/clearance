@@ -57,11 +57,11 @@ clearance.validate({
 ```javascript
 
 Clearance.setRule( "minimumLength", function( object, set, collection ) {
- // object.name  - the name of the object currently being validated.
- // object.value - the value of the object currently being validated.
- // set.invalid  - the method to execute if the object is valid (with an optional message).
- // set.valid    - the method to execute if the object is valid (with an optional message).
- // collection   - the collection of objects the object being validated belongs to.
+  // object.name  - the name of the object currently being validated.
+  // object.value - the value of the object currently being validated.
+  // set.invalid  - the method to execute if the object is invalid (optional message).
+  // set.valid    - the method to execute if the object is valid (optional message).
+  // collection   - the collection of objects the object being validated belongs to.
  
   if ( object.value.length < 4 ) {
     set.invalid( "This objects value must be at least 4 characters long." );
