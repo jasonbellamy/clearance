@@ -86,7 +86,9 @@
     /**
      * @callback Clearance.ruleCallback
      * @param {object} object - the object being validated.
+     * @param {string} object.message - the message associated with the state of the object.
      * @param {string} object.name - the name of the object.
+     * @param {boolean} object.valid - the state of the object.
      * @param {string|number|boolean} object.value - the value of the object.
      * @param {object} set - object containing valid/invalid callback methods.
      * @param {Clearance.ruleValidCallback} set.valid - callback to trigger if the object is valid.
