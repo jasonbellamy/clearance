@@ -314,7 +314,7 @@
      * @description sets the collection of objects this object is associated with.
      * @param {boolean} value - the collection.
      */
-    setValid: function( value ) {
+    setCollection: function( value ) {
       Object.defineProperty( this, "collection", { value: value || {} } );
     },
 
